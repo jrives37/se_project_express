@@ -1,4 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
+const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
 
 const getItems = (req, res) => {
   ClothingItem.find({})
@@ -6,7 +7,7 @@ const getItems = (req, res) => {
       res.status(200).send(items);
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res.status(SERVER_ERROR).send({ message: err.message });
     });
 };
 
@@ -23,7 +24,7 @@ const createItem = (req, res) => {
       res.status(201).send(item);
     })
     .catch((err) => {
-      res.status(400).send({ message: err.message });
+      res.status(BAD_REQUEST).send({ message: err.message });
     });
 };
 
@@ -35,16 +36,17 @@ const deleteItem = (req, res) => {
       console.error(err);
 
       if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(BAD_REQUEST).send({ message: err.message });
       }
 
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: err.message });
+        return res.status(NOT_FOUND).send({ message: err.message });
       }
 
-      return res.status(500).send({ message: err.message });
+      return res.status(SERVER_ERROR).send({ message: err.message });
     });
 };
+
 const likeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
@@ -57,14 +59,14 @@ const likeItem = (req, res) => {
       console.error(err);
 
       if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(BAD_REQUEST).send({ message: err.message });
       }
 
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: err.message });
+        return res.status(NOT_FOUND).send({ message: err.message });
       }
 
-      return res.status(500).send({ message: err.message });
+      return res.status(SERVER_ERROR).send({ message: err.message });
     });
 };
 
@@ -80,14 +82,14 @@ const dislikeItem = (req, res) => {
       console.error(err);
 
       if (err.name === "CastError") {
-        return res.status(400).send({ message: err.message });
+        return res.status(BAD_REQUEST).send({ message: err.message });
       }
 
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: err.message });
+        return res.status(NOT_FOUND).send({ message: err.message });
       }
 
-      return res.status(500).send({ message: err.message });
+      return res.status(SERVER_ERROR).send({ message: err.message });
     });
 };
 
