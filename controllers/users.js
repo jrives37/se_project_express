@@ -1,14 +1,16 @@
 const User = require("../models/user");
 const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
 
-// GET/users
+// GET /users
 
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.status(200).send(users))
     .catch((err) => {
       console.error(err);
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res.status(SERVER_ERROR).send({
+        message: "An error has occurred on the server",
+      });
     });
 };
 
@@ -21,18 +23,26 @@ const createUser = (req, res) => {
       console.error(err);
 
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return res.status(BAD_REQUEST).send({
+          message: "An error has occurred on the server",
+        });
       }
 
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: err.message });
+        return res.status(NOT_FOUND).send({
+          message: "An error has occurred on the server",
+        });
       }
 
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return res.status(BAD_REQUEST).send({
+          message: "An error has occurred on the server",
+        });
       }
 
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res.status(SERVER_ERROR).send({
+        message: "An error has occurred on the server",
+      });
     });
 };
 
@@ -48,14 +58,20 @@ const getUser = (req, res) => {
       console.error(err);
 
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: err.message });
+        return res.status(NOT_FOUND).send({
+          message: "An error has occurred on the server",
+        });
       }
 
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return res.status(BAD_REQUEST).send({
+          message: "An error has occurred on the server",
+        });
       }
 
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res.status(SERVER_ERROR).send({
+        message: "An error has occurred on the server",
+      });
     });
 };
 
