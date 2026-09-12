@@ -24,19 +24,19 @@ const createUser = (req, res) => {
 
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({
-          message: "An error has occurred on the server",
+          message: "Invalid request",
         });
       }
 
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({
-          message: "An error has occurred on the server",
+          message: "User not found",
         });
       }
 
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({
-          message: "An error has occurred on the server",
+          message: "Invalid user ID",
         });
       }
 
@@ -59,13 +59,13 @@ const getUser = (req, res) => {
 
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({
-          message: "An error has occurred on the server",
+          message: "User not found",
         });
       }
 
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({
-          message: "An error has occurred on the server",
+          message: "Invalid user ID",
         });
       }
 
