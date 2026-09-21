@@ -41,8 +41,17 @@ const createItem = (req, res) => {
     });
 };
 const deleteItem = (req, res) => {
-  ClothingItem.findByIdAndDelete(req.params.itemId)
+  ClothingItem.findById(req.params.itemId)
     .orFail()
+    .then((item) => {
+      if (item.owner.toString() !== req.user._id) {
+        return res.status(403).send({
+          message: "You do not have permission to delete this item",
+        });
+      }
+
+      return ClothingItem.findByIdAndDelete(req.params.itemId);
+    })
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(err);
