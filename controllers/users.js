@@ -2,7 +2,13 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const User = require("../models/user");
-const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
+const {
+  BAD_REQUEST,
+  CONFLICT,
+  NOT_FOUND,
+  UNAUTHORIZED,
+  SERVER_ERROR,
+} = require("../utils/errors");
 
 const { JWT_SECRET } = require("../utils/config");
 
@@ -38,6 +44,12 @@ const getCurrentUser = (req, res) => {
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
+  if (!email || !password) {
+    return res.status(BAD_REQUEST).send({
+      message: "Invalid request",
+    });
+  }
+
   return bcrypt
     .hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
@@ -56,7 +68,7 @@ const createUser = (req, res) => {
       }
 
       if (err.code === 11000) {
-        return res.status(409).send({
+        return res.status(CONFLICT).send({
           message: "Email already exists",
         });
       }
@@ -85,7 +97,7 @@ const login = (req, res) => {
       res.send({ token });
     })
     .catch(() => {
-      res.status(401).send({
+      res.status(UNAUTHORIZED).send({
         message: "Invalid email or password",
       });
     });
