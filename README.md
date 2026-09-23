@@ -42,3 +42,7 @@ ESLint with the Airbnb configuration is used to maintain consistent JavaScript c
 Postman is used to send HTTP requests to the API and test its endpoints and responses.
 
 MongoDB Compass is used to view and manage the data stored in the MongoDB database.
+
+# Project Pitch
+
+https://www.loom.com/share/ffc628309e194c408f3daed194d3247d
