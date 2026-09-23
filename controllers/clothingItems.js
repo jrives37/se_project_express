@@ -49,15 +49,16 @@ const deleteItem = (req, res) => {
   ClothingItem.findById(req.params.itemId)
     .orFail()
     .then((item) => {
-      if (item.owner.toString() !== req.user._id) {
+      if (item.owner.toString() !== req.user._id.toString()) {
         return res.status(FORBIDDEN).send({
           message: "You do not have permission to delete this item",
         });
       }
 
-      return ClothingItem.findByIdAndDelete(req.params.itemId);
+      return ClothingItem.findByIdAndDelete(req.params.itemId).then(
+        (deletedItem) => res.status(200).send(deletedItem)
+      );
     })
-    .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(err);
 
@@ -78,7 +79,6 @@ const deleteItem = (req, res) => {
       });
     });
 };
-
 const likeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
