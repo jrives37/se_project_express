@@ -2,6 +2,29 @@
 
 The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.
 
+## Live Project
+
+**Deployed Website:** https://wtwr-demo.awiki.org
+
+**Backend API:** https://api.wtwr-demo.awiki.org
+
+**Frontend GitHub Repository:** https://github.com/jrives37/se_project_react
+
+**Backend GitHub Repository:** https://github.com/jrives37/se_project_express
+
+## Deployment and Security
+
+The WTWR application is deployed on a remote virtual machine.
+
+- **Google Cloud:** Hosts the application and database.
+- **PM2:** Keeps the Node.js backend running and automatically restarts it after crashes.
+- **Nginx:** Serves the frontend and forwards API requests to the backend.
+- **HTTPS/SSL:** Secures communication using Let's Encrypt certificates.
+- **JWT:** Authenticates users and protects private API routes.
+- **Celebrate/Joi:** Validates incoming requests.
+- **Winston:** Logs requests and errors.
+- **Environment variables:** Store configuration values and sensitive information outside the source code.
+
 # Project Functionality
 
 The API provides the following functionality:
