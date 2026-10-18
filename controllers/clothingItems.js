@@ -4,7 +4,7 @@ const {
   FORBIDDEN,
   NOT_FOUND,
   SERVER_ERROR,
-} = require("../utils/errors");
+} = require("../middlewares/errors");
 
 const getItems = (req, res) => {
   ClothingItem.find({})

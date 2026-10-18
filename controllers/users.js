@@ -3,16 +3,15 @@ const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const User = require("../models/user");
 const {
-  BAD_REQUEST,
-  CONFLICT,
-  NOT_FOUND,
-  UNAUTHORIZED,
-  SERVER_ERROR,
-} = require("../utils/errors");
+  BadRequestError,
+  ConflictError,
+  NotFoundError,
+  UnauthorizedError,
+} = require("../middlewares/errors");
 
 const { JWT_SECRET } = require("../utils/config");
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   const { _id } = req.user;
 
   User.findById(_id)
@@ -21,33 +20,23 @@ const getCurrentUser = (req, res) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      console.error(err);
-
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({
-          message: "User not found",
-        });
+        return next(new NotFoundError("User not found"));
       }
 
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({
-          message: "Invalid user ID",
-        });
+        return next(new BadRequestError("Invalid user ID"));
       }
 
-      return res.status(SERVER_ERROR).send({
-        message: "An error has occurred on the server",
-      });
+      return next(err);
     });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(BAD_REQUEST).send({
-      message: "Invalid request",
-    });
+    return next(new BadRequestError("Invalid request"));
   }
 
   return bcrypt
@@ -59,33 +48,23 @@ const createUser = (req, res) => {
       res.status(201).send(userData);
     })
     .catch((err) => {
-      console.error(err);
-
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({
-          message: "Invalid request",
-        });
+        return next(new BadRequestError("Invalid request"));
       }
 
       if (err.code === 11000) {
-        return res.status(CONFLICT).send({
-          message: "Email already exists",
-        });
+        return next(new ConflictError("Email already exists"));
       }
 
-      return res.status(SERVER_ERROR).send({
-        message: "An error has occurred on the server",
-      });
+      return next(err);
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password || !validator.isEmail(email)) {
-    return res.status(BAD_REQUEST).send({
-      message: "Invalid request",
-    });
+    return next(new BadRequestError("Invalid request"));
   }
 
   return User.findUserByCredentials(email, password)
@@ -97,21 +76,14 @@ const login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      console.error(err);
-
       if (err.message === "Incorrect email or password") {
-        return res.status(UNAUTHORIZED).send({
-          message: "Invalid email or password",
-        });
+        return next(new UnauthorizedError("Invalid email or password"));
       }
 
-      return res.status(SERVER_ERROR).send({
-        message: "An error has occurred on the server",
-      });
+      return next(err);
     });
 };
-
-const updateProfile = (req, res) => {
+const updateProfile = (req, res, next) => {
   const { name, avatar } = req.body;
 
   User.findByIdAndUpdate(
@@ -124,23 +96,15 @@ const updateProfile = (req, res) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      console.error(err);
-
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({
-          message: "User not found",
-        });
+        return next(new NotFoundError("User not found"));
       }
 
-      if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({
-          message: "Invalid request",
-        });
+      if (err.name === "ValidationError" || err.name === "CastError") {
+        return next(new BadRequestError("Invalid request"));
       }
 
-      return res.status(SERVER_ERROR).send({
-        message: "An error has occurred on the server",
-      });
+      return next(err);
     });
 };
 
