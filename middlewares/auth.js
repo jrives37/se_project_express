@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
-const { UnauthorizedError } = require("./errors");
+const UnauthorizedError = require("../errors/UnauthorizedError");
 
 const auth = (req, res, next) => {
   if (process.env.NODE_ENV === "test" && req.user?._id) {
